@@ -24,4 +24,11 @@ public class SimpleRequest implements Request {
     public void setLoad(int units) {
         this.units = units;
     }
+
+    @Override
+    public String toString() {
+        return "SimpleRequest{" +
+                "units=" + units +
+                '}';
+    }
 }

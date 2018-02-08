@@ -3,9 +3,9 @@ package ru.isu.compmodels.imitation;
 import java.util.Queue;
 import java.util.concurrent.*;
 
-public class DummyServer implements Server {
+public class DummyServer extends Thread implements Server {
 
-    BlockingQueue<Request> requests = new LinkedBlockingQueue<>();
+    BlockingQueue<Request> requests = new LinkedBlockingQueue<Request>();
     private int unitsPerSecond;
     private boolean shouldStop=false;
 
@@ -53,7 +53,7 @@ public class DummyServer implements Server {
 
     @Override
     public void run() {
-        System.out.println("Запуск сервера " +this+ " в потоке "+Thread.currentThread());
+        System.out.println("Запуск сервера " +this);
         while(!shouldStop){
             try {
                 Request r = requests.take();
@@ -63,17 +63,17 @@ public class DummyServer implements Server {
                 //todo убрать, чтобы не тормозило выводом в консоль.
                 System.out.println("Запрос обработан: "+ r.toString());
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                System.out.println("Разбудили ");
             }
         }
-        System.out.println("Завершение работы сервера " +this+ " в потоке "+Thread.currentThread());
+        System.out.println("Завершение работы сервера " +this);
     }
 
     @Override
     public void shutDown() {
         shouldStop = true;
         //Будим, если он уснул по take на пустой очереди
-        Thread.currentThread().interrupt();
+        this.interrupt();
     }
 
 }
