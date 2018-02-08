@@ -53,15 +53,20 @@ public class DummyServer implements Server {
 
     @Override
     public void run() {
+        System.out.println("Запуск сервера " +this+ " в потоке "+Thread.currentThread());
         while(!shouldStop){
             try {
                 Request r = requests.take();
                 //симуляция обработки запроса, просто спим некоторое время
-                Thread.sleep(r.getLoad() / getPerformance()*1000);
+                Thread.sleep(1000* r.getLoad() / getPerformance());
+
+                //todo убрать, чтобы не тормозило выводом в консоль.
+                System.out.println("Запрос обработан: "+ r.toString());
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
+        System.out.println("Завершение работы сервера " +this+ " в потоке "+Thread.currentThread());
     }
 
     @Override
